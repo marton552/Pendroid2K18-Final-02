@@ -10,6 +10,7 @@ import com.faszallitok.dontovan.MyBaseClasses.UI.MyButton;
 import com.faszallitok.dontovan.MyGdxGame;
 import com.faszallitok.dontovan.Screens.Game.GameScreen;
 import com.faszallitok.dontovan.Screens.Wire.WireScreen;
+import com.faszallitok.dontovan.Screens.WordMatrix.WordMatrixScreen;
 
 public class StoryStage extends MyStage{
     public StoryStage(Batch batch, final MyGdxGame game) {
@@ -38,6 +39,17 @@ public class StoryStage extends MyStage{
             }
         });
         addActor(wire);
+
+        MyButton mtrx = new MyButton("mátrix", game.getButtonStyle());
+        mtrx.setX(mtrx.getWidth() * 2);
+        mtrx.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                game.setScreen(new WordMatrixScreen(game));
+            }
+        });
+        addActor(mtrx);
 
     }
 

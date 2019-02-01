@@ -51,6 +51,8 @@ public class GameStage extends MyStage {
 	OneSpriteStaticActor playerBar;
 	OneSpriteStaticActor enemyBar;
 
+	private float stepSize = 0;
+
 	public GameStage(Batch batch, MyGdxGame game, final GameScreen screen) {
 		super(new ExtendViewport(1024, 576, new OrthographicCamera(1024, 576)), batch, game);
 
@@ -89,12 +91,12 @@ public class GameStage extends MyStage {
         playerBar = new OneSpriteStaticActor(Assets.manager.get(Assets.BAR));
         playerBar.setWidth(400);
         playerBar.setPosition(20, playerName.getY() - playerBar.getHeight() - 5);
-        addActor(playerBar);
 
         OneSpriteStaticActor playerOutBar = new OneSpriteStaticActor(Assets.manager.get(Assets.BAR_OUT));
-        playerOutBar.setSize(playerOutBar.getWidth(), playerBar.getHeight());
-        playerOutBar.setPosition(playerBar.getX(), playerBar.getY());
+        playerOutBar.setSize(playerOutBar.getWidth() + 4, playerBar.getHeight() + 4);
+        playerOutBar.setPosition(playerBar.getX() - 2, playerBar.getY() - 2);
         addActor(playerOutBar);
+        addActor(playerBar);
 
 
 		MyLabel enemyName = new MyLabel("Iván", game.getLabelStyle());
@@ -105,14 +107,16 @@ public class GameStage extends MyStage {
 		enemyBar = new OneSpriteStaticActor(Assets.manager.get(Assets.BAR));
 		enemyBar.setWidth(400);
 		enemyBar.setPosition(getViewport().getWorldWidth() - enemyBar.getWidth() - 20, enemyName.getY() - enemyBar.getHeight() - 5);
-		addActor(enemyBar);
 
 		OneSpriteStaticActor enemyOutBar = new OneSpriteStaticActor(Assets.manager.get(Assets.BAR_OUT));
-		enemyOutBar.setSize(enemyOutBar.getWidth(), enemyBar.getHeight());
-		enemyOutBar.setPosition(enemyBar.getX(), enemyBar.getY());
-		addActor(enemyOutBar);
+		enemyOutBar.setSize(enemyOutBar.getWidth() + 4, enemyBar.getHeight() + 4);
+		enemyOutBar.setPosition(enemyBar.getX() - 2, enemyBar.getY() - 2);
 
-		//hitEnemy();
+		addActor(enemyOutBar);
+		addActor(enemyBar);
+
+		stepSize = enemyBar.getWidth() / 100;
+
 		hitPlayer();
 	}
 
@@ -138,16 +142,17 @@ public class GameStage extends MyStage {
 
 	public void enemyGotHit() {
         ENEMY_HP -= PLAYER_DAMAGE;
-
-        //TESZT:
-        hitPlayer();
+		System.out.println("enemyhp: "+PLAYER_HP);
+		//TESZT:
+        //hitPlayer();
     }
 
     public void playerGotHit() {
         PLAYER_HP -= ENEMY_DAMAGE;
+		System.out.println("playerhp: "+PLAYER_HP);
 
         //TESZT:
-        hitEnemy();
+        //hitEnemy();
     }
 
 
@@ -163,6 +168,26 @@ public class GameStage extends MyStage {
 		player.setY(player.getY() + ((float)Math.cos(tick) * 10) / 50);
 		enemy.setY(enemy.getY() - ((float)Math.cos(tick) * 10) / 80);
 
+		if(oldEnemyHP != ENEMY_HP) {
+			if(oldEnemyHP > ENEMY_HP) {
+				oldEnemyHP -= 1;
+			}else {
+				oldEnemyHP += 1;
+			}
+		}
+
+		enemyBar.setWidth(oldEnemyHP * stepSize);
+
+
+		if(oldPlayerHP != PLAYER_HP) {
+			if(oldPlayerHP > PLAYER_HP) {
+				oldPlayerHP -= 1;
+			}else {
+				oldPlayerHP += 1;
+			}
+		}
+
+		playerBar.setWidth(oldPlayerHP * stepSize);
 
 		if(isPlayerHitting) {
 			nextHitCounter++;
@@ -179,6 +204,7 @@ public class GameStage extends MyStage {
 				if(nextHitCounter> nextHitCd) {
 					if (player.getX() >= hitX + 30) {
 						hitStage = 2;
+						enemyGotHit();
 
 					} else {
 						player.setX(player.getX() + 5);
@@ -197,7 +223,6 @@ public class GameStage extends MyStage {
 				if(nextHitCounter> nextHitCd) {
 					if (player.getX() <= playerStartPosX && player.getY() <= playerStartPosY) {
 						isPlayerHitting = false;
-                        enemyGotHit();
 					} else {
 						player.setPosition(player.getX() - (playerHitPosX - playerStartPosX) / virusSpeed, player.getY() - (playerHitPosY - playerStartPosY) / virusSpeed);
 					}
@@ -221,7 +246,7 @@ public class GameStage extends MyStage {
 					//System.out.println(enemy.getX()+" <= "+hitX+" - 30");
 					if (enemy.getX() <= hitX - 30) {
 						hitStage = 2;
-
+						playerGotHit();
 					} else {
 						enemy.setX(enemy.getX() - 5);
 					}
@@ -239,7 +264,6 @@ public class GameStage extends MyStage {
 				if(nextHitCounter> nextHitCd) {
 					if (enemy.getX() >= enemyStartPosX && enemy.getY() >= enemyStartPosY) {
 						isEnemyHitting = false;
-                        playerGotHit();
                     } else {
 						enemy.setPosition(enemy.getX() - (enemyHitPosX - enemyStartPosX) / virusSpeed, enemy.getY() - (enemyHitPosY - enemyStartPosY) / virusSpeed);
 					}
