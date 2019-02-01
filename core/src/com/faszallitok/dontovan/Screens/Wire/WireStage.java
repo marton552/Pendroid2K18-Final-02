@@ -1,24 +1,21 @@
 package com.faszallitok.dontovan.Screens.Wire;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.faszallitok.dontovan.GlobalClasses.Assets;
 import com.faszallitok.dontovan.MyBaseClasses.Scene2D.MyStage;
-import com.faszallitok.dontovan.MyBaseClasses.Scene2D.OneSpriteActor;
 import com.faszallitok.dontovan.MyBaseClasses.Scene2D.OneSpriteStaticActor;
+import com.faszallitok.dontovan.MyBaseClasses.UI.MyLabel;
 import com.faszallitok.dontovan.MyGdxGame;
+import com.faszallitok.dontovan.Screens.Game.GameScreen;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class WireStage extends MyStage{
 
@@ -29,6 +26,11 @@ public class WireStage extends MyStage{
     int[][] referncia;
     int[][] kevert;
     int rnd;
+
+    public int maxTime = 30;
+    public double nextTime = System.currentTimeMillis() + 1000;
+
+    MyLabel time;
 
     public WireStage(Batch batch, MyGdxGame game) {
         super(new ExtendViewport(1024, 576, new OrthographicCamera(1024, 576)), batch, game);
@@ -55,6 +57,17 @@ public class WireStage extends MyStage{
             }
         }
         rajzolas(rnd, kevert);
+
+        time = new MyLabel("30", game.getLabelStyle());
+        time.setPosition(getViewport().getWorldWidth() - time.getWidth(), getViewport().getWorldHeight() / 2 - time.getHeight() / 2);
+        addActor(time);
+
+        MyLabel info = new MyLabel("Segíts Pendroid\nman-nek a\nhackelésbe!\nCsak egy mód\nlehetséges!", game.getLabelStyle());
+        info.setY(getViewport().getWorldHeight() / 2- info.getHeight() / 2);
+        info.setX(10);
+        info.setAlignment(Align.center);
+
+        addActor(info);
     }
 
     public int[] csere1 = new int[4];
@@ -96,7 +109,8 @@ public class WireStage extends MyStage{
                 }
             }
             if(count==rnd*rnd){
-                System.out.println("grat");
+                //System.out.println("grat");
+                game.setScreen(new GameScreen(game, 1));
             }
             else count=0;
     }}
@@ -113,7 +127,7 @@ public class WireStage extends MyStage{
 
                 if (i==start && endvolt == 1){
                     OneSpriteStaticActor start =new OneSpriteStaticActor(Assets.manager.get(Assets.START));
-                    start.setDebug(true);
+                    start.setDebug(false);
                     addActor(start);
                     start.setSize((float)(start.getWidth()*1.66),(float)(start.getHeight()*1.66));
                     start.setPosition(nyak.getX()+ nyak.getWidth()/rnd*k-start.getWidth(),nyak.getY()+nyak.getHeight()-(nyak.getHeight()/rnd*i+1)-start.getHeight());
@@ -122,7 +136,7 @@ endvolt = 2;
 
                 if (i==end && endvolt2==1){
                     OneSpriteStaticActor end =new OneSpriteStaticActor(Assets.manager.get(Assets.END));
-                    end.setDebug(true);
+                    end.setDebug(false);
                     addActor(end);
                     end.setSize((float)(end.getWidth()*1.66),(float)(end.getHeight()*1.66));
                     end.setPosition(nyak.getX()+ nyak.getWidth(),nyak.getY()+nyak.getHeight()-(nyak.getHeight()/rnd*i+1)-end.getHeight());
@@ -132,7 +146,7 @@ endvolt2=2;
                 final int g = i;
                 final int h = k;
             actors[i][k]=new OneSpriteStaticActor(Assets.manager.get(skins[asd[i][k]]));
-                actors[i][k].setDebug(true);
+                actors[i][k].setDebug(false);
             addActor(actors[i][k]);
                 actors[i][k].setSize((float)(actors[i][k].getWidth()*1.66),(float)(actors[i][k].getHeight()*1.66));
             actors[i][k].setPosition(nyak.getX()+ nyak.getWidth()/rnd*k,nyak.getY()+nyak.getHeight()-(nyak.getHeight()/rnd*i+1)-actors[i][k].getHeight());
@@ -291,6 +305,21 @@ endvolt2=2;
         }
         g[7]=999;
         return g;
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+
+        if(nextTime < System.currentTimeMillis()){
+            nextTime = System.currentTimeMillis() + 1000;
+            time.setText(maxTime+"");
+            maxTime--;
+            if(maxTime <= 0) {
+                game.setScreen(new GameScreen(game, 2));
+                return;
+            }
+        }
     }
 
     @Override

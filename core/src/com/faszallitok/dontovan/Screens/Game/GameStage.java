@@ -142,6 +142,8 @@ public class GameStage extends MyStage {
 
 		if(state == 2 || state == 4) DODGE = true;
 
+		System.out.println("DODGE: "+DODGE);
+
 	}
 
 	public float getAngle(float cx, float cy, float tx, float ty) {

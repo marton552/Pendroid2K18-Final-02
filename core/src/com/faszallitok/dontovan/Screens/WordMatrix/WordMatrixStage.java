@@ -115,6 +115,7 @@ public class WordMatrixStage extends MyStage {
             timeLabel.setText(TIME+"");
             if(TIME == 0) {
                 game.setScreen(new GameScreen(game,3 ));
+                return;
             }
         }
     }
