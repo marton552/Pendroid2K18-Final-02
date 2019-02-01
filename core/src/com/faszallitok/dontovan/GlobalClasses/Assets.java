@@ -83,6 +83,19 @@ public class Assets {
 	//Etc UI
 	public static final AssetDescriptor<Texture> DARK = new AssetDescriptor<Texture>("ui_textures/dark.png", Texture.class);
 
+	//wire
+	public static final AssetDescriptor<Texture> WIRE0 = new AssetDescriptor<Texture>("wire/0.png", Texture.class);
+	public static final AssetDescriptor<Texture> WIRE1 = new AssetDescriptor<Texture>("wire/1.png", Texture.class);
+	public static final AssetDescriptor<Texture> WIRE2 = new AssetDescriptor<Texture>("wire/2.png", Texture.class);
+	public static final AssetDescriptor<Texture> WIRE3 = new AssetDescriptor<Texture>("wire/3.png", Texture.class);
+	public static final AssetDescriptor<Texture> WIRE4 = new AssetDescriptor<Texture>("wire/4.png", Texture.class);
+	public static final AssetDescriptor<Texture> WIRE5 = new AssetDescriptor<Texture>("wire/5.png", Texture.class);
+	public static final AssetDescriptor<Texture> WIRE6 = new AssetDescriptor<Texture>("wire/6.png", Texture.class);
+	public static final AssetDescriptor<Texture> NYAKNYAK = new AssetDescriptor<Texture>("wire/nyaklap.png", Texture.class);
+	public static final AssetDescriptor<Texture> START = new AssetDescriptor<Texture>("wire/start.png", Texture.class);
+	public static final AssetDescriptor<Texture> END = new AssetDescriptor<Texture>("wire/End.png", Texture.class);
+
+
 	//Sounds
 
 	//Music
@@ -139,6 +152,17 @@ public class Assets {
 		manager.load(SLIDER_BG);
 		manager.load(SLIDER_KNOB);
 		manager.load(SLIDER_KNOBH);
+
+		manager.load(WIRE0);
+		manager.load(WIRE1);
+		manager.load(WIRE2);
+		manager.load(WIRE3);
+		manager.load(WIRE4);
+		manager.load(WIRE5);
+		manager.load(WIRE6);
+		manager.load(NYAKNYAK);
+		manager.load(START);
+		manager.load(END);
 
 		manager.load(DARK);
 

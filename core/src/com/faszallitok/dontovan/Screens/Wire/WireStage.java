@@ -1,10 +1,19 @@
 package com.faszallitok.dontovan.Screens.Wire;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.faszallitok.dontovan.GlobalClasses.Assets;
 import com.faszallitok.dontovan.MyBaseClasses.Scene2D.MyStage;
+import com.faszallitok.dontovan.MyBaseClasses.Scene2D.OneSpriteActor;
+import com.faszallitok.dontovan.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import com.faszallitok.dontovan.MyGdxGame;
 
 import java.util.ArrayList;
@@ -14,17 +23,139 @@ import java.util.List;
 public class WireStage extends MyStage{
 
     public int[] list = new int[8];
+    public static AssetDescriptor<Texture>[] skins = new AssetDescriptor[]{Assets.WIRE0, Assets.WIRE1, Assets.WIRE2, Assets.WIRE3, Assets.WIRE4,Assets.WIRE5,Assets.WIRE6};
+    OneSpriteStaticActor nyak;
+    OneSpriteStaticActor[][] actors;
+    int[][] referncia;
+    int[][] kevert;
+    int rnd;
 
     public WireStage(Batch batch, MyGdxGame game) {
         super(new ExtendViewport(1024, 576, new OrthographicCamera(1024, 576)), batch, game);
-        generalas();
+        nyak = new OneSpriteStaticActor(Assets.manager.get(Assets.NYAKNYAK));
+        addActor(nyak);
+        nyak.setPositionCenterOfActorToCenterOfViewport();
+        rnd = 3;
+        kevert = new int[rnd][rnd];
+        referncia = generalas(rnd);
+        for (int i = 0; i<rnd; i++){
+            for (int k = 0; k<rnd;k++){
+                kevert[i][k] = referncia[i][k];
+            }
+        }
+        int save;
+        for (int i = 0; i<rnd; i++){
+            for (int k = 0; k<rnd;k++){
+                int rand1 = randomInt(0,rnd);
+                int rand2 = randomInt(0,rnd);
+                save = kevert[rand1][rand2];
+                kevert[rand1][rand2] = kevert[i][k];
+                kevert[i][k] = save;
+                System.out.println(rand2+" "+rand1);
+            }
+        }
+        rajzolas(rnd, kevert);
     }
 
-    public void generalas(){
+    public int[] csere1 = new int[4];
+    public int csereQ = 1;
+
+    int firstClickedI = -1;
+    int firstClickedK = -1;
+
+    int savek = -1;
+    int savei = -1;
+    int count = 0;
+
+    public void funct(int i, int k){
+
+        if(firstClickedK==-1){
+        firstClickedI = i;
+        firstClickedK = k; }
+        else{
+        savei = i;
+        savek = k;
+        int ref1 = kevert[firstClickedI][firstClickedK];
+        int ref2 = kevert[savei][savek];
+        int ref3 = kevert[savei][savek];
+        kevert[savei][savek] = ref1;
+        kevert[firstClickedI][firstClickedK]=ref3;
+        Texture t = actors[i][k].getTexture();
+        actors[i][k].setTexture(Assets.manager.get(skins[ref1]));
+
+        actors[firstClickedI][firstClickedK].setTexture(t);
+        firstClickedK = -1;
+        firstClickedI = -1;
+        savek = -1;
+        savei = -1;
+
+            for (int g = 0; g<rnd; g++){
+                for (int h = 0; h<rnd;h++){
+                    if(kevert[g][h] == referncia[g][h])count++;
+                    System.out.println(count);
+                }
+            }
+            if(count==rnd*rnd){
+                System.out.println("grat");
+            }
+            else count=0;
+    }}
+
+    public void rajzolas(int rnd, int[][] asd){
+
+        actors = new OneSpriteStaticActor[rnd][rnd];
+
+        int endvolt = 1;
+        int endvolt2 = 1;
+
+        for (int i = 0; i<rnd; i++){
+            for (int k = 0; k<rnd;k++){
+
+                if (i==start && endvolt == 1){
+                    OneSpriteStaticActor start =new OneSpriteStaticActor(Assets.manager.get(Assets.START));
+                    start.setDebug(true);
+                    addActor(start);
+                    start.setSize((float)(start.getWidth()*1.66),(float)(start.getHeight()*1.66));
+                    start.setPosition(nyak.getX()+ nyak.getWidth()/rnd*k-start.getWidth(),nyak.getY()+nyak.getHeight()-(nyak.getHeight()/rnd*i+1)-start.getHeight());
+endvolt = 2;
+                }
+
+                if (i==end && endvolt2==1){
+                    OneSpriteStaticActor end =new OneSpriteStaticActor(Assets.manager.get(Assets.END));
+                    end.setDebug(true);
+                    addActor(end);
+                    end.setSize((float)(end.getWidth()*1.66),(float)(end.getHeight()*1.66));
+                    end.setPosition(nyak.getX()+ nyak.getWidth(),nyak.getY()+nyak.getHeight()-(nyak.getHeight()/rnd*i+1)-end.getHeight());
+endvolt2=2;
+                }
+
+                final int g = i;
+                final int h = k;
+            actors[i][k]=new OneSpriteStaticActor(Assets.manager.get(skins[asd[i][k]]));
+                actors[i][k].setDebug(true);
+            addActor(actors[i][k]);
+                actors[i][k].setSize((float)(actors[i][k].getWidth()*1.66),(float)(actors[i][k].getHeight()*1.66));
+            actors[i][k].setPosition(nyak.getX()+ nyak.getWidth()/rnd*k,nyak.getY()+nyak.getHeight()-(nyak.getHeight()/rnd*i+1)-actors[i][k].getHeight());
+            actors[i][k].addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    funct(g, h);
+                }});
+            System.out.print(asd[i][k]);
+        }
+            System.out.println();
+    }
+    }
+
+    int start;
+    int end;
+
+    public int[][] generalas(int rnd){
         boolean xyz=true;
-        int hossz = 5;
-        int start = randomInt(0,hossz);
-        int end=randomInt(0,hossz);
+        int hossz = rnd;
+        start = 0;
+        end=randomInt(0,hossz);
         int[][] matrix = new int[hossz][hossz];
         while(xyz){
             for (int i = 0; i<hossz; i++){
@@ -32,7 +163,7 @@ public class WireStage extends MyStage{
                     matrix[i][k]=0;
                 }
             }
-            start = randomInt(0,hossz);
+            start = 0;
             end = randomInt(0,hossz);
             int x = 0;
             int y = 0;
@@ -141,11 +272,6 @@ public class WireStage extends MyStage{
             else if(kocka==6 && honnanjott ==3){honnanjott=3; x--;
             }
 
-            for (int i = 0; i<hossz; i++){
-                for (int k = 0; k<hossz;k++){
-                    System.out.print(matrix[i][k]);
-                }System.out.println("");
-            }
             if(kocka==999)break;
         }}
         for (int i = 0; i<hossz; i++){
@@ -153,6 +279,7 @@ public class WireStage extends MyStage{
                 System.out.print(matrix[i][k]);
             }System.out.println("");
         }
+        return matrix;
     }
 
     static int randomInt(int min, int max) {
