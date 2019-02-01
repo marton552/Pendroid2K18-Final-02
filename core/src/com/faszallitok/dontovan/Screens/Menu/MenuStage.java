@@ -12,6 +12,7 @@ import com.faszallitok.dontovan.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import com.faszallitok.dontovan.MyBaseClasses.UI.MyButton;
 import com.faszallitok.dontovan.MyGdxGame;
 import com.faszallitok.dontovan.Screens.About.AboutScreen;
+import com.faszallitok.dontovan.Screens.Story.StoryScreen;
 
 public class MenuStage extends MyStage {
 
@@ -35,7 +36,7 @@ public class MenuStage extends MyStage {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                //getGame().setScreen(new LevelSelectScreen(getGame()));
+                getGame().setScreen(new StoryScreen(getGame()));
             }
         });
         addActor(play);

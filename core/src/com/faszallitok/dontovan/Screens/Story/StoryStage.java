@@ -1,0 +1,33 @@
+package com.faszallitok.dontovan.Screens.Story;
+
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.faszallitok.dontovan.MyBaseClasses.Scene2D.MyStage;
+import com.faszallitok.dontovan.MyBaseClasses.UI.MyButton;
+import com.faszallitok.dontovan.MyGdxGame;
+import com.faszallitok.dontovan.Screens.Wire.WireScreen;
+
+public class StoryStage extends MyStage{
+    public StoryStage(Batch batch, final MyGdxGame game) {
+        super(new ExtendViewport(1024, 576, new OrthographicCamera(1024, 576)), batch, game);
+
+        MyButton wire = new MyButton("Wire", game.getButtonStyle());
+        wire.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                game.setScreen(new WireScreen(game));
+            }
+        });
+        addActor(wire);
+
+    }
+
+    @Override
+    public void init() {
+
+    }
+}
