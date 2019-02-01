@@ -42,6 +42,10 @@ public class Assets {
 
 	//Atlasok
 	//public static final AssetDescriptor<TextureAtlas> LOADING_ATLAS = new AssetDescriptor<TextureAtlas>("atlasok/title.atlas", TextureAtlas.class);
+
+	//Penlogo
+	public static final AssetDescriptor<Texture> PENLOGO = new AssetDescriptor<Texture>("penlogo.jpg", Texture.class);
+
 	//Menu
 	public static final AssetDescriptor<Texture> MENU_BG = new AssetDescriptor<Texture>("menu.png", Texture.class);
 	public static final AssetDescriptor<Texture> MENU_ICON = new AssetDescriptor<Texture>("menu-icon.png", Texture.class);
@@ -83,6 +87,8 @@ public class Assets {
 		manager.load(MENU_BG);
 		manager.load(MENU_ICON);
 		manager.load(BG);
+
+		manager.load(PENLOGO);
 
 		manager.load(BTN_BACK);
 		manager.load(BTN_HOVER);

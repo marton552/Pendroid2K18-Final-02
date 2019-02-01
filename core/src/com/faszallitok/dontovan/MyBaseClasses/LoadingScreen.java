@@ -7,7 +7,7 @@ import com.faszallitok.dontovan.GlobalClasses.Assets;
 import com.faszallitok.dontovan.MyBaseClasses.Scene2D.MyScreen;
 import com.faszallitok.dontovan.MyBaseClasses.Scene2D.OneSpriteAnimatedActor;
 import com.faszallitok.dontovan.MyGdxGame;
-import com.faszallitok.dontovan.Screens.Menu.MenuScreen;
+import com.faszallitok.dontovan.Screens.CopyrightScreen;
 
 
 public class LoadingScreen extends MyScreen {
@@ -42,7 +42,7 @@ public class LoadingScreen extends MyScreen {
         spriteBatch.end();
         if (Assets.manager.update()) {
             Assets.afterLoaded();
-            game.setScreen(new MenuScreen(game));
+            game.setScreen(new CopyrightScreen(game));
             //MusicPlayer.playMenuMusic();
         }
     }
