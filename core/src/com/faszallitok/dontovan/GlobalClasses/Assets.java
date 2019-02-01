@@ -46,6 +46,11 @@ public class Assets {
 	//Penlogo
 	public static final AssetDescriptor<Texture> PENLOGO = new AssetDescriptor<Texture>("penlogo.jpg", Texture.class);
 
+	//Game
+	public static final AssetDescriptor<Texture> PLAYER = new AssetDescriptor<Texture>("game/player.png", Texture.class);
+	public static final AssetDescriptor<Texture> ENEMY = new AssetDescriptor<Texture>("game/enemy.png", Texture.class);
+
+
 	//Menu
 	public static final AssetDescriptor<Texture> MENU_BG = new AssetDescriptor<Texture>("menu.png", Texture.class);
 	public static final AssetDescriptor<Texture> MENU_ICON = new AssetDescriptor<Texture>("menu-icon.png", Texture.class);
@@ -83,6 +88,9 @@ public class Assets {
 		manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
 		manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
 		manager.setLoader(BitmapFont.class, ".otf", new FreetypeFontLoader(resolver));
+
+		manager.load(PLAYER);
+		manager.load(ENEMY);
 
 		manager.load(MENU_BG);
 		manager.load(MENU_ICON);

@@ -22,7 +22,7 @@ public class GameHUD extends MyStage{
 
         menu = new OneSpriteStaticActor(Assets.manager.get(Assets.MENU_ICON));
         menu.setSize(30, 30);
-        menu.setPosition(getViewport().getWorldWidth() - 40, getViewport().getWorldHeight() - 40);
+        menu.setPosition(getViewport().getWorldWidth() - menu.getWidth() - 10, getViewport().getWorldHeight() -  menu.getHeight() - 10);
         menu.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -35,7 +35,7 @@ public class GameHUD extends MyStage{
         OneSpriteStaticActor menu_bg = new OneSpriteStaticActor(Assets.manager.get(Assets.DARK));
         menu_bg.setSize(menu.getWidth() + 2, menu.getHeight() + 2);
         menu_bg.setPosition(menu.getX() - 1, menu.getY() - 1);
-        addActor(menu_bg);
+        //addActor(menu_bg);
         addActor(menu);
     }
 

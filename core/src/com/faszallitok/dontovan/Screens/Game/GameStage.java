@@ -1,11 +1,12 @@
 package com.faszallitok.dontovan.Screens.Game;
 
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.faszallitok.dontovan.GlobalClasses.Assets;
 import com.faszallitok.dontovan.MyBaseClasses.Scene2D.MyStage;
-import com.faszallitok.dontovan.MyBaseClasses.Scene2D.OneSpriteStaticActor;
+import com.faszallitok.dontovan.MyBaseClasses.UI.MyLabel;
 import com.faszallitok.dontovan.MyGdxGame;
 
 import java.util.ArrayList;
@@ -14,81 +15,71 @@ import java.util.Random;
 public class GameStage extends MyStage {
 	private Random rand = new Random();
 
-	public OneSpriteStaticActor szunyog;
+	public Virus player;
+	public Virus enemy;
 
-	public float szunyogDirX = 0;
-	public float szunyogDirY = 0;
+	public ArrayList<Integer> list = new ArrayList<Integer>();
 
-	public int mapW = 5000;
-	public int mapH = 5000;
+	public float playerHitPosX = 0; //Pozíció ahol megüti az enemy-t
+	public float playerHitPosY = 0;
 
-	public float szunyog_speed = 6; // def: 6
+	public float enemyHitPosX = 0; //Pozíció ahol megüti az player-t
+	public float enemyHitPosY = 0;
 
-	public float HUNGER = 100; //Éhség
-	public float hungerLoss = 0.04f; //Milyen éhes legyen időközönként
-	public boolean isSucking = false; //Jelenleg vért szív-e
-	public float suckTime = 100; //Mennyi idő egy szívás
-	public float currSuckTime = 0; //Mennyi ideje szívott
-	public float suckSpeed = 1; //Szívás gyorsaság
-	public float suckHunger = 10; //Mennyi éhséget vonjon szívás után
-	public int currSuckingArea = 0; //Jelenleg melyik területet szívja
+	public float playerStartPosX = 0; //Player kiinduló pozíció
+	public float playerStartPosY = 0;
 
-	public int dashCD = 300; //Dash töltési idő
-	public int dashCurrCD = dashCD; //Hol tart a visszatöltés
-	public float dashSpeed = 2; //Mennyivel szorozza a gyorsaságot, dashkor
-	public int dashDuration = 20; //Mennyi ideig legyen dash
-	public int dashCurrDur = 0; //Mennyi ideje megy a dash.
-	public boolean isDashing = false;
+	public float enemyStartPosX = 0; //Enemmy kiinduló pozíció
+	public float enemyStartPosY = 0;
 
-	public int maxSuckedAreas = 30;
+	public int virusSpeed = 100;
 
-	public int lastStrike = 0; //Hány actnyira volt az utolsó csapás
-	public int strikeRarityMin = 800; //Milyen gyakran legyen csapás(maximum)
-	public int strikeRarityMax = 2000; //Milyen gyakran legyen csapás(maximum)
-	public int nextStrike = 0;
-	public int nextStrikeCounter = 0;
-	public boolean isStriking = false; //Lecsapás van-e
-	public int nextStrikeDownRarityMin = 300;
-	public int nextStrikeDownRarityMax = 500;
-	public int nextStrikeDown = 0;
-	public int nextStrikeDownCounter = 0;
-	public float strikingAtX = 0;
-	public float strikingAtY = 0;
-	public boolean strikeInbound = false; //Lecsapás célzás
-	public float strikeSpeed = 13;
-	public float strikeMinW;
-	public float strikeMinH;
-	public float strikeMaxW;
-	public float strikeMaxH;
+	public boolean isEnemyHitting = false; //Amikor az enemy hitelődik.
+	public boolean isPlayerHitting = false;
 
-	public float strikeDestX = 0;
-	public float strikeDestY = 0;
-	public float strikeCurrX = 0;
-	public float strikeCurrY = 0;
-	public float strikeDestSpeed = 30;
-
-
-	//Stats
-	private int dealtDamage = 0;
-	private long ellapsedTime = System.currentTimeMillis();
-	private int ellapsedSecs = 0;
-	private int missedStrikes = 0;
-
-	public Sound bzz;
-
-
-	private ArrayList<OneSpriteStaticActor> suckAreas = new ArrayList<OneSpriteStaticActor>();
-	private ArrayList<OneSpriteStaticActor> suckedAreas = new ArrayList<OneSpriteStaticActor>();
-
-	private OneSpriteStaticActor map;
-
-	private OneSpriteStaticActor arm;
-	private OneSpriteStaticActor arm_shadow;
-
+	public int hitStage = 0;
+	public float hitX = 0;
+	public int nextHitCounter = 0;
+	public int nextHitCd = 20;
 
 	public GameStage(Batch batch, MyGdxGame game, final GameScreen screen) {
 		super(new ExtendViewport(1024, 576, new OrthographicCamera(1024, 576)), batch, game);
 
+
+		player = new Virus(Assets.manager.get(Assets.PLAYER));
+		player.setSize(player.getWidth() / 2.5f, player.getHeight() / 2.5f);
+		player.setPosition( 50, 30);
+
+		playerStartPosX = player.getX();
+		playerStartPosY = player.getY();
+
+		addActor(player);
+
+		enemy = new Virus(Assets.manager.get(Assets.ENEMY));
+		enemy.setSize(enemy.getWidth() / 2.5f, enemy.getHeight() / 2.5f);
+		enemy.setPosition(getViewport().getWorldWidth() - enemy.getWidth() - 30, 150);
+
+		enemyStartPosX = enemy.getX();
+		enemyStartPosY = enemy.getY();
+
+		enemyHitPosX = player.getX() + player.getWidth() - 100;
+		enemyHitPosY = player.getY();
+		addActor(enemy);
+
+		playerHitPosX = enemy.getX() - player.getWidth() + 100;
+		playerHitPosY = enemy.getY();
+
+		MyLabel playerName = new MyLabel("Pendroid Man", game.getLabelStyle());
+		playerName.setPosition(10, getViewport().getWorldHeight() - playerName.getHeight() - 50);
+		playerName.setColor(Color.BLACK);
+		addActor(playerName);
+
+		MyLabel enemyrName = new MyLabel("Iván", game.getLabelStyle());
+		enemyrName.setPosition(getViewport().getWorldWidth() - enemyrName.getWidth() - 10, getViewport().getWorldHeight() - enemyrName.getHeight() - 50);
+		enemyrName.setColor(Color.BLACK);
+		addActor(enemyrName);
+
+		hitEnemy();
 	}
 
 	public float getAngle(float cx, float cy, float tx, float ty) {
@@ -101,12 +92,69 @@ public class GameStage extends MyStage {
 		return angle;
 	}
 
+	public void hitEnemy() { //Amikor a player megüti az enemyt
+		isPlayerHitting = true;
+		hitStage = 0;
+	}
+
+	public void hitPlayer() { //Amikor az enemy üti a playert
+		isEnemyHitting = true;
+		hitStage = 0;
+	}
+
+
+	private int tick = 0;
+	private int animSpeed = 0;
 
 	@Override
 	public void act(float delta) {
 		super.act(delta);
+		animSpeed++;
+		if(animSpeed % 10 == 0) tick++;
+
+		player.setY(player.getY() + ((float)Math.cos(tick) * 10) / 50);
+		enemy.setY(enemy.getY() - ((float)Math.cos(tick) * 10) / 80);
 
 
+		if(isPlayerHitting) {
+			nextHitCounter++;
+			if(hitStage == 0) {
+				if (player.getX() >= playerHitPosX && player.getY() >= playerHitPosY) {
+					//isPlayerHitting = false;
+					hitStage = 1;
+					hitX = player.getX();
+					nextHitCounter = 0;
+				} else {
+					player.setPosition(player.getX() + (playerHitPosX - playerStartPosX) / virusSpeed, player.getY() + (playerHitPosY - playerStartPosY) / virusSpeed);
+				}
+			}else if(hitStage == 1) {
+				if(nextHitCounter> nextHitCd) {
+					if (player.getX() >= hitX + 30) {
+						hitStage = 2;
+
+					} else {
+						player.setX(player.getX() + 5);
+					}
+				}
+			}else if(hitStage == 2) {
+
+				if (player.getX() <= hitX) {
+					hitStage = 3;
+					nextHitCounter = 0;
+				} else {
+					player.setX(player.getX() - 5);
+				}
+
+			}else if(hitStage == 3) {
+				if(nextHitCounter> nextHitCd) {
+					if (player.getX() <= playerStartPosX && player.getY() <= playerStartPosY) {
+						isPlayerHitting = false;
+					} else {
+						player.setPosition(player.getX() - (playerHitPosX - playerStartPosX) / virusSpeed, player.getY() - (playerHitPosY - playerStartPosY) / virusSpeed);
+					}
+				}
+			}
+		}
 
 	}
 
