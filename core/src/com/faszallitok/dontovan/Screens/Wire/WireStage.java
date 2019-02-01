@@ -62,7 +62,7 @@ public class WireStage extends MyStage{
         time.setPosition(getViewport().getWorldWidth() - time.getWidth(), getViewport().getWorldHeight() / 2 - time.getHeight() / 2);
         addActor(time);
 
-        MyLabel info = new MyLabel("Segíts Pendroid\nman-nek a\nhackelésbe!\nCsak egy mód\nlehetséges!", game.getLabelStyle());
+        MyLabel info = new MyLabel("Segíts Pendroid\nman-nek a\nhackelésbe!\nCsak egy mód\nlehetséges!\nKattints arra\na két elemre\namit cserélni\nakarsz.", game.getLabelStyle());
         info.setY(getViewport().getWorldHeight() / 2- info.getHeight() / 2);
         info.setX(10);
         info.setAlignment(Align.center);

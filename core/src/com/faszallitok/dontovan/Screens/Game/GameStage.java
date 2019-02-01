@@ -138,7 +138,7 @@ public class GameStage extends MyStage {
 		if(state == 0) { bevez = true; bevezTill = System.currentTimeMillis() + 1000;}
 
 		if(state == 1 || state == 2) hitEnemy();
-		if(state == 3) hitPlayer();
+		if(state == 3 || state == 4) hitPlayer();
 
 		if(state == 2 || state == 4) DODGE = true;
 
@@ -203,17 +203,17 @@ public class GameStage extends MyStage {
 
 
     public void playerHittingAnimStop() {
-		if(PLAYER_TURN == true) {
-			PLAYER_TURN = false;
+		//if(PLAYER_TURN == true) {
+		//	PLAYER_TURN = false;
 			game.setScreen(new WordMatrixScreen(game));
-		}
+		//}
 	}
 
 	public void enemyHittingAnimStop() {
-		if(PLAYER_TURN == false) {
-			PLAYER_TURN = true;
+		//if(PLAYER_TURN == false) {
+		//	PLAYER_TURN = true;
 			game.setScreen(new WireScreen(game));
-		}
+		//}
 	}
 
 	private int tick = 0;
