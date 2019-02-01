@@ -17,12 +17,23 @@ public class LoadingScreen extends MyScreen {
         super(game);
     }
     BitmapFont bitmapFont = new BitmapFont();
-    TextureAtlas atlas = new TextureAtlas("atlasok/loading.atlas");
+    TextureAtlas atlas = new TextureAtlas("atlasok/ying-yang-loading.atlas");
     OneSpriteAnimatedActor loading = new OneSpriteAnimatedActor(atlas);
     {
-        loading.setFps(60);
+        loading.setFps(20);
         loading.setLooping(true);
         loading.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    }
+
+    TextureAtlas atlas2 = new TextureAtlas("atlasok/logoFinalHor.atlas");
+    OneSpriteAnimatedActor logo = new OneSpriteAnimatedActor(atlas2);
+    {
+        logo.setFps(8);
+        logo.setLooping(true);
+        //logo.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        //logo.setY(Gdx.graphics.getHeight() - logo.getHeight() - 10);
+        logo.setY(10);
+        logo.setX(Gdx.graphics.getWidth() / 2 - logo.getWidth() / 2);
     }
 
     @Override
@@ -38,6 +49,8 @@ public class LoadingScreen extends MyScreen {
         spriteBatch.begin();
         loading.draw(spriteBatch, 1f);
         loading.act(delta);
+        logo.draw(spriteBatch, 1f);
+        logo.act(delta);
         bitmapFont.draw(spriteBatch,"Betöltés: " + Assets.manager.getLoadedAssets() + "/" + (Assets.manager.getQueuedAssets()+ Assets.manager.getLoadedAssets()) + " (" + ((int)(Assets.manager.getProgress()*100f)) + "%)", 0, 0);
         spriteBatch.end();
         if (Assets.manager.update()) {

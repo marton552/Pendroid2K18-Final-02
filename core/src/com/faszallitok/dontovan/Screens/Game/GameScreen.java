@@ -13,10 +13,16 @@ public class GameScreen extends MyScreen {
     GameHUD gameHud;
     public boolean isPaused = false;
 
-    public GameScreen(MyGdxGame game) {
+    public GameScreen(MyGdxGame game, int state) {
+        //state: 0 - kezdés
+        //state: 1 - ember üt.
+        //state: 2 - dodgeolta az enemy ütését
+        //state 3: - enemy üt
+        //state 4: - dodgeolta a player
+
         super(game);
-        MusicPlayer.stopMenuMusic();
-        gameStage = new GameStage(spriteBatch, game, this);
+        MusicPlayer.startGameMusic();
+        gameStage = new GameStage(spriteBatch, game, this, state);
         hud = new HUD(spriteBatch, game, this);
         gameHud = new GameHUD(spriteBatch, game, this);
 

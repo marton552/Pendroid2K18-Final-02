@@ -9,6 +9,9 @@ import com.faszallitok.dontovan.MyBaseClasses.Scene2D.MyStage;
 import com.faszallitok.dontovan.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import com.faszallitok.dontovan.MyBaseClasses.UI.MyLabel;
 import com.faszallitok.dontovan.MyGdxGame;
+import com.faszallitok.dontovan.Screens.End.EndScreen;
+import com.faszallitok.dontovan.Screens.Wire.WireScreen;
+import com.faszallitok.dontovan.Screens.WordMatrix.WordMatrixScreen;
 
 import java.util.Random;
 
@@ -53,7 +56,16 @@ public class GameStage extends MyStage {
 
 	private float stepSize = 0;
 
-	public GameStage(Batch batch, MyGdxGame game, final GameScreen screen) {
+	MyLabel dodgeLabel;
+	double labelVisibleTill = 0;
+
+	public boolean DODGE = false;
+	public static boolean PLAYER_TURN = true;
+
+	public boolean bevez = false;
+	public double bevezTill;
+
+	public GameStage(Batch batch, MyGdxGame game, final GameScreen screen, int state) {
 		super(new ExtendViewport(1024, 576, new OrthographicCamera(1024, 576)), batch, game);
 
 		OneSpriteStaticActor bg = new OneSpriteStaticActor(Assets.manager.get(Assets.ARENA));
@@ -115,9 +127,21 @@ public class GameStage extends MyStage {
 		addActor(enemyOutBar);
 		addActor(enemyBar);
 
+
+		dodgeLabel = new MyLabel("Kikerülve!", game.getLabelStyle());
+		dodgeLabel.setVisible(false);
+		dodgeLabel.setColor(Color.YELLOW);
+		addActor(dodgeLabel);
+
 		stepSize = enemyBar.getWidth() / 100;
 
-		hitPlayer();
+		if(state == 0) { bevez = true; bevezTill = System.currentTimeMillis() + 1000;}
+
+		if(state == 1 || state == 2) hitEnemy();
+		if(state == 3) hitPlayer();
+
+		if(state == 2 || state == 4) DODGE = true;
+
 	}
 
 	public float getAngle(float cx, float cy, float tx, float ty) {
@@ -141,20 +165,54 @@ public class GameStage extends MyStage {
 	}
 
 	public void enemyGotHit() {
-        ENEMY_HP -= PLAYER_DAMAGE;
+		if(DODGE == false) ENEMY_HP -= PLAYER_DAMAGE;
+		else {
+			dodgeLabel.setPosition(player.getX() + player.getWidth() / 2 - dodgeLabel.getWidth() / 2, player.getY() + player.getHeight() + dodgeLabel.getHeight() + 5);
+			dodgeLabel.setVisible(true);
+			labelVisibleTill = System.currentTimeMillis() + 1000;
+		}
 		System.out.println("enemyhp: "+PLAYER_HP);
 		//TESZT:
         //hitPlayer();
+
+		if(ENEMY_HP <= 0) {
+			game.setScreen(new EndScreen(game, true));
+		}
     }
 
     public void playerGotHit() {
-        PLAYER_HP -= ENEMY_DAMAGE;
+
+		if(DODGE == false) PLAYER_HP -= ENEMY_DAMAGE;
+		else {
+			dodgeLabel.setPosition(enemy.getX() + enemy.getWidth() / 2 - dodgeLabel.getWidth() / 2, enemy.getY() + enemy.getHeight() + dodgeLabel.getHeight() + 5);
+			dodgeLabel.setVisible(true);
+			labelVisibleTill = System.currentTimeMillis() + 1000;
+		}
+
 		System.out.println("playerhp: "+PLAYER_HP);
+
+		if(PLAYER_HP <= 0) {
+			game.setScreen(new EndScreen(game, false));
+		}
 
         //TESZT:
         //hitEnemy();
     }
 
+
+    public void playerHittingAnimStop() {
+		if(PLAYER_TURN == true) {
+			PLAYER_TURN = false;
+			game.setScreen(new WordMatrixScreen(game));
+		}
+	}
+
+	public void enemyHittingAnimStop() {
+		if(PLAYER_TURN == false) {
+			PLAYER_TURN = true;
+			game.setScreen(new WireScreen(game));
+		}
+	}
 
 	private int tick = 0;
 	private int animSpeed = 0;
@@ -162,6 +220,20 @@ public class GameStage extends MyStage {
 	@Override
 	public void act(float delta) {
 		super.act(delta);
+
+		if(bevez == true) {
+			if(System.currentTimeMillis() > bevezTill) {
+				game.setScreen(new WireScreen(game));
+				return;
+			}
+		}
+
+		if(dodgeLabel.isVisible()) {
+			if(System.currentTimeMillis() > labelVisibleTill){
+				dodgeLabel.setVisible(false);
+			}
+		}
+
 		animSpeed++;
 		if(animSpeed % 10 == 0) tick++;
 
@@ -223,6 +295,7 @@ public class GameStage extends MyStage {
 				if(nextHitCounter> nextHitCd) {
 					if (player.getX() <= playerStartPosX && player.getY() <= playerStartPosY) {
 						isPlayerHitting = false;
+						playerHittingAnimStop();
 					} else {
 						player.setPosition(player.getX() - (playerHitPosX - playerStartPosX) / virusSpeed, player.getY() - (playerHitPosY - playerStartPosY) / virusSpeed);
 					}
@@ -264,6 +337,7 @@ public class GameStage extends MyStage {
 				if(nextHitCounter> nextHitCd) {
 					if (enemy.getX() >= enemyStartPosX && enemy.getY() >= enemyStartPosY) {
 						isEnemyHitting = false;
+						enemyHittingAnimStop();
                     } else {
 						enemy.setPosition(enemy.getX() - (enemyHitPosX - enemyStartPosX) / virusSpeed, enemy.getY() - (enemyHitPosY - enemyStartPosY) / virusSpeed);
 					}

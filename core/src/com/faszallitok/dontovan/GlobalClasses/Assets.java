@@ -56,6 +56,12 @@ public class Assets {
 	public static final AssetDescriptor<Texture> BAR = new AssetDescriptor<Texture>("game/bar.png", Texture.class);
 	public static final AssetDescriptor<Texture> BAR_OUT = new AssetDescriptor<Texture>("game/bar-out.png", Texture.class);
 
+	//Story
+	public static final AssetDescriptor<Texture> STORY1 = new AssetDescriptor<Texture>("story/screen1.png", Texture.class);
+	public static final AssetDescriptor<Texture> STORY2 = new AssetDescriptor<Texture>("story/screen2.png", Texture.class);
+	public static final AssetDescriptor<Texture> STORY3 = new AssetDescriptor<Texture>("story/screen3.png", Texture.class);
+	public static final AssetDescriptor<Texture> JOJO = new AssetDescriptor<Texture>("story/jojo.png", Texture.class);
+
 
 	//Menu
 	public static final AssetDescriptor<Texture> MENU_BG = new AssetDescriptor<Texture>("menu.png", Texture.class);
@@ -81,6 +87,12 @@ public class Assets {
 
 	//Music
 	public static final AssetDescriptor<Music> MENU_MUSIC = new AssetDescriptor<Music>("zene/1.ogg", Music.class);
+	public static final AssetDescriptor<Music> GAME_MUSIC = new AssetDescriptor<Music>("zene/2.wav", Music.class);
+
+	public static final AssetDescriptor<Music> MUSIC1 = new AssetDescriptor<Music>("story/story1.wav", Music.class);
+	public static final AssetDescriptor<Music> MUSIC2 = new AssetDescriptor<Music>("story/story2.wav", Music.class);
+	public static final AssetDescriptor<Music> MUSIC3 = new AssetDescriptor<Music>("story/story3.wav", Music.class);
+	public static final AssetDescriptor<Music> MUSIC4 = new AssetDescriptor<Music>("story/story4.wav", Music.class);
 
 
 
@@ -108,6 +120,16 @@ public class Assets {
 
 		manager.load(PENLOGO);
 
+		manager.load(STORY1);
+		manager.load(STORY2);
+		manager.load(STORY3);
+		manager.load(JOJO);
+
+		manager.load(MUSIC1);
+		manager.load(MUSIC2);
+		manager.load(MUSIC3);
+		manager.load(MUSIC4);
+
 		manager.load(BTN_BACK);
 		manager.load(BTN_HOVER);
 
@@ -121,6 +143,7 @@ public class Assets {
 		manager.load(DARK);
 
 		manager.load(MENU_MUSIC);
+		manager.load(GAME_MUSIC);
 
 		manager.load(ALEGREYAREGULAR_FONT);
 

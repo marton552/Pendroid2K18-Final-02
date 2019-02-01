@@ -32,10 +32,12 @@ public class AboutStage extends MyStage {
         title.setFontScale(1.6f);
         addActor(title);
 
-        info = new MyLabel("A célod, hogy a szúnyog segítségével minél többet egyél,\nmert ha nem eszel akkor éhen hal a szúnyog\nVigyázz, mert Sanyi próbál közbe lecsapni téged!\nPróbáld meg kikerülni a többi akadályt is, mert meglepetésben lehet részed.\n\nKészítők: Fa Szállítók csapata", game.getLabelStyle());
+        info = new MyLabel("Egy védelmező vírus vagy, aki próbálja legyőzni a gonosz Ivánt.\nKét féle hackelés van, próbálj mind kettőbe ugyeskedni.\nAz egyikbe szót kell keresni, másikba az utat.\nSok szerencsét!\n\nKészítők: Fa Szállítók csapata", game.getLabelStyle());
         info.setAlignment(Align.center);
         info.setPosition(getViewport().getWorldWidth() / 2 - info.getWidth() / 2, getViewport().getWorldHeight() - 390);
         addActor(info);
+
+        OneSpriteStaticActor logo = new OneSpriteStaticActor(Assets.manager.get(Assets.PENLOGO));
 
         back = new MyButton("Menü", game.getButtonStyle());
         back.setPosition(getViewport().getWorldWidth() / 2 - back.getWidth() / 2, 20 );

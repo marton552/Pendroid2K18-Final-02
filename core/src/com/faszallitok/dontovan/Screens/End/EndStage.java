@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.faszallitok.dontovan.GlobalClasses.Assets;
 import com.faszallitok.dontovan.MyBaseClasses.Scene2D.MyStage;
 import com.faszallitok.dontovan.MyBaseClasses.Scene2D.OneSpriteStaticActor;
@@ -17,7 +16,7 @@ import com.faszallitok.dontovan.MyGdxGame;
 import com.faszallitok.dontovan.Screens.Menu.MenuScreen;
 
 public class EndStage extends MyStage {
-    public EndStage(Batch batch, final MyGdxGame game, int death_type, int dealt_damage, int ellapsed_secs, int missed_strikes) {
+    public EndStage(Batch batch, final MyGdxGame game, boolean win) {
         super(new ExtendViewport(1024, 576, new OrthographicCamera(1024, 576)), batch, game);
 
         OneSpriteStaticActor bg = new OneSpriteStaticActor(Assets.manager.get(Assets.BG));
@@ -29,8 +28,12 @@ public class EndStage extends MyStage {
         dark.setPosition(getViewport().getWorldWidth() / 2 - dark.getWidth() / 2, 0);
         addActor(dark);
 
-        String typeTxt = "Éhen Haltál";
-        if(death_type == 1) typeTxt = "Lecsaptak";
+        String typeTxt = "Nyertél!";
+        String infoTxt = "Sikeresen megnyerted a csatádat!\nPróbáld újra, és győzz le minél több ellenfelet!";
+        if(win == false) {
+            typeTxt = "Vesztettél!";
+            infoTxt = "Most sajnos ez nem sikerült neked!\nPróbáld újra, hidd el menni fog!";
+        }
 
         MyLabel title = new MyLabel(typeTxt, game.getLabelStyle());
         title.getStyle().fontColor = Color.YELLOW;
@@ -39,7 +42,7 @@ public class EndStage extends MyStage {
         title.setFontScale(2f);
         addActor(title);
 
-        MyLabel txt = new MyLabel("Okozott sérülések: "+dealt_damage+" db\nTúlélt idő: "+ellapsed_secs+" mp\nKikerült leütések: "+missed_strikes+" db", game.getLabelStyle());
+        MyLabel txt = new MyLabel(infoTxt, game.getLabelStyle());
         txt.setFontScale(0.8f);
         txt.setAlignment(Align.center);
         txt.setPosition(getViewport().getWorldWidth() / 2 - txt.getWidth() / 2, getViewport().getWorldHeight() / 2 - txt.getHeight() / 2 - 20);
