@@ -49,6 +49,12 @@ public class Assets {
 	//Game
 	public static final AssetDescriptor<Texture> PLAYER = new AssetDescriptor<Texture>("game/player.png", Texture.class);
 	public static final AssetDescriptor<Texture> ENEMY = new AssetDescriptor<Texture>("game/enemy.png", Texture.class);
+	public static final AssetDescriptor<Texture> ARENA = new AssetDescriptor<Texture>("game/arena.png", Texture.class);
+
+
+	//BAR
+	public static final AssetDescriptor<Texture> BAR = new AssetDescriptor<Texture>("game/bar.png", Texture.class);
+	public static final AssetDescriptor<Texture> BAR_OUT = new AssetDescriptor<Texture>("game/bar-out.png", Texture.class);
 
 
 	//Menu
@@ -91,6 +97,10 @@ public class Assets {
 
 		manager.load(PLAYER);
 		manager.load(ENEMY);
+		manager.load(ARENA);
+
+		manager.load(BAR);
+		manager.load(BAR_OUT);
 
 		manager.load(MENU_BG);
 		manager.load(MENU_ICON);

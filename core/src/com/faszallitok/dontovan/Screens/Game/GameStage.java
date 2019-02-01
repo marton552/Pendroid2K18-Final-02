@@ -6,10 +6,10 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.faszallitok.dontovan.GlobalClasses.Assets;
 import com.faszallitok.dontovan.MyBaseClasses.Scene2D.MyStage;
+import com.faszallitok.dontovan.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import com.faszallitok.dontovan.MyBaseClasses.UI.MyLabel;
 import com.faszallitok.dontovan.MyGdxGame;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class GameStage extends MyStage {
@@ -17,8 +17,6 @@ public class GameStage extends MyStage {
 
 	public Virus player;
 	public Virus enemy;
-
-	public ArrayList<Integer> list = new ArrayList<Integer>();
 
 	public float playerHitPosX = 0; //Pozíció ahol megüti az enemy-t
 	public float playerHitPosY = 0;
@@ -42,9 +40,23 @@ public class GameStage extends MyStage {
 	public int nextHitCounter = 0;
 	public int nextHitCd = 20;
 
+	public static int PLAYER_HP = 100;
+	public static int ENEMY_HP = 100;
+	public static int PLAYER_DAMAGE = 10;
+	public static int ENEMY_DAMAGE = 15;
+
+	private int oldPlayerHP = PLAYER_HP;
+	private int oldEnemyHP = ENEMY_HP;
+
+	OneSpriteStaticActor playerBar;
+	OneSpriteStaticActor enemyBar;
+
 	public GameStage(Batch batch, MyGdxGame game, final GameScreen screen) {
 		super(new ExtendViewport(1024, 576, new OrthographicCamera(1024, 576)), batch, game);
 
+		OneSpriteStaticActor bg = new OneSpriteStaticActor(Assets.manager.get(Assets.ARENA));
+		bg.setSize(getViewport().getWorldWidth(), getViewport().getWorldHeight());
+		addActor(bg);
 
 		player = new Virus(Assets.manager.get(Assets.PLAYER));
 		player.setSize(player.getWidth() / 2.5f, player.getHeight() / 2.5f);
@@ -70,16 +82,38 @@ public class GameStage extends MyStage {
 		playerHitPosY = enemy.getY();
 
 		MyLabel playerName = new MyLabel("Pendroid Man", game.getLabelStyle());
-		playerName.setPosition(10, getViewport().getWorldHeight() - playerName.getHeight() - 50);
+		playerName.setPosition(20, getViewport().getWorldHeight() - playerName.getHeight() - 20);
 		playerName.setColor(Color.BLACK);
 		addActor(playerName);
 
-		MyLabel enemyrName = new MyLabel("Iván", game.getLabelStyle());
-		enemyrName.setPosition(getViewport().getWorldWidth() - enemyrName.getWidth() - 10, getViewport().getWorldHeight() - enemyrName.getHeight() - 50);
-		enemyrName.setColor(Color.BLACK);
-		addActor(enemyrName);
+        playerBar = new OneSpriteStaticActor(Assets.manager.get(Assets.BAR));
+        playerBar.setWidth(400);
+        playerBar.setPosition(20, playerName.getY() - playerBar.getHeight() - 5);
+        addActor(playerBar);
 
-		hitEnemy();
+        OneSpriteStaticActor playerOutBar = new OneSpriteStaticActor(Assets.manager.get(Assets.BAR_OUT));
+        playerOutBar.setSize(playerOutBar.getWidth(), playerBar.getHeight());
+        playerOutBar.setPosition(playerBar.getX(), playerBar.getY());
+        addActor(playerOutBar);
+
+
+		MyLabel enemyName = new MyLabel("Iván", game.getLabelStyle());
+		enemyName.setPosition(getViewport().getWorldWidth() - enemyName.getWidth() - 20, getViewport().getWorldHeight() - enemyName.getHeight() - 20);
+		enemyName.setColor(Color.BLACK);
+		addActor(enemyName);
+
+		enemyBar = new OneSpriteStaticActor(Assets.manager.get(Assets.BAR));
+		enemyBar.setWidth(400);
+		enemyBar.setPosition(getViewport().getWorldWidth() - enemyBar.getWidth() - 20, enemyName.getY() - enemyBar.getHeight() - 5);
+		addActor(enemyBar);
+
+		OneSpriteStaticActor enemyOutBar = new OneSpriteStaticActor(Assets.manager.get(Assets.BAR_OUT));
+		enemyOutBar.setSize(enemyOutBar.getWidth(), enemyBar.getHeight());
+		enemyOutBar.setPosition(enemyBar.getX(), enemyBar.getY());
+		addActor(enemyOutBar);
+
+		//hitEnemy();
+		hitPlayer();
 	}
 
 	public float getAngle(float cx, float cy, float tx, float ty) {
@@ -101,6 +135,20 @@ public class GameStage extends MyStage {
 		isEnemyHitting = true;
 		hitStage = 0;
 	}
+
+	public void enemyGotHit() {
+        ENEMY_HP -= PLAYER_DAMAGE;
+
+        //TESZT:
+        hitPlayer();
+    }
+
+    public void playerGotHit() {
+        PLAYER_HP -= ENEMY_DAMAGE;
+
+        //TESZT:
+        hitEnemy();
+    }
 
 
 	private int tick = 0;
@@ -149,8 +197,51 @@ public class GameStage extends MyStage {
 				if(nextHitCounter> nextHitCd) {
 					if (player.getX() <= playerStartPosX && player.getY() <= playerStartPosY) {
 						isPlayerHitting = false;
+                        enemyGotHit();
 					} else {
 						player.setPosition(player.getX() - (playerHitPosX - playerStartPosX) / virusSpeed, player.getY() - (playerHitPosY - playerStartPosY) / virusSpeed);
+					}
+				}
+			}
+		}
+
+		if(isEnemyHitting) {
+			nextHitCounter++;
+			if(hitStage == 0) {
+				if (enemy.getX() <= enemyHitPosX && enemy.getY() <= enemyHitPosY) {
+					//isEnemyHitting = false;
+					hitStage = 1;
+					hitX = enemy.getX();
+					nextHitCounter = 0;
+				} else {
+					enemy.setPosition(enemy.getX() + (enemyHitPosX - enemyStartPosX) / virusSpeed, enemy.getY() + (enemyHitPosY - enemyStartPosY) / virusSpeed);
+				}
+			}else if(hitStage == 1) {
+				if(nextHitCounter> nextHitCd) {
+					//System.out.println(enemy.getX()+" <= "+hitX+" - 30");
+					if (enemy.getX() <= hitX - 30) {
+						hitStage = 2;
+
+					} else {
+						enemy.setX(enemy.getX() - 5);
+					}
+				}
+			}else if(hitStage == 2) {
+
+				if (enemy.getX() >= hitX) {
+					hitStage = 3;
+					nextHitCounter = 0;
+				} else {
+					enemy.setX(enemy.getX() + 5);
+				}
+
+			}else if(hitStage == 3) {
+				if(nextHitCounter> nextHitCd) {
+					if (enemy.getX() >= enemyStartPosX && enemy.getY() >= enemyStartPosY) {
+						isEnemyHitting = false;
+                        playerGotHit();
+                    } else {
+						enemy.setPosition(enemy.getX() - (enemyHitPosX - enemyStartPosX) / virusSpeed, enemy.getY() - (enemyHitPosY - enemyStartPosY) / virusSpeed);
 					}
 				}
 			}
