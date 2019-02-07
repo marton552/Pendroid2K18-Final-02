@@ -49,6 +49,11 @@ public class AboutStage extends MyStage {
             }
         });
         addActor(back);
+
+        OneSpriteStaticActor aa = new OneSpriteStaticActor(Assets.manager.get(Assets.PENLOGO));
+        addActor(aa);
+        aa.setSize(aa.getWidth()/3,aa.getHeight()/3);
+
     }
 
     @Override

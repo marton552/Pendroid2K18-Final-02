@@ -16,7 +16,7 @@ import java.util.Random;
 
 public class WordMatrixStage extends MyStage {
 
-    public String[] szavak = new String[]{"FA", "SZALLITOK", "PENDROID", "VERSENY", "BENDZSI", "MARTON", "VALTER", "MARTIN", "CSANY", "TELEFON", "SZILARD", "KANIZSA", "EGERSZEG", "IVÁN", "IPROUTE", "TUSKE"};
+    public String[] szavak = new String[]{"FA", "SZALLITOK", "PENDROID", "VERSENY", "BENDZSI", "MARTON", "VALTER", "MARTIN", "CSANY", "TELEFON", "SZILARD", "KANIZSA", "EGERSZEG", "IVAN", "IPROUTE", "TUSKE","KECSKE","ANDROID","PETOFI","RANTOTTA","WINDOWS"};
 
     public int MAX_WORDS = 3;
     public int FOUND_WORDS = 0;
@@ -61,7 +61,7 @@ public class WordMatrixStage extends MyStage {
 
 
             MyLabel label = new MyLabel(generateRow(12, startAt, randWord.length()), game.getLabelStyle());
-            label.setColor(Color.GREEN);
+            label.setColor(new Color(0, 0.9f, 0, 1));
             label.setAlignment(Align.center);
             label.setX((35 * i) + 5);
             label.setY(label.getY() - 30);
@@ -80,7 +80,7 @@ public class WordMatrixStage extends MyStage {
 
                 szo.setPosition(label.getX(), label.getY() + label.getHeight() - szo.getHeight() - (startAt)*42); //- startAt * 30);
                 szo.setAlignment(Align.center);
-                szo.setColor(new Color(1, 0.1f, 0.1f, 1));
+                szo.setColor(new Color(0.5f, 1f, 0, 1));
                 szo.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
