@@ -37,7 +37,7 @@ public class MusicPlayer {
             isGameMusicPlaying = true;
             gameMusic = Assets.manager.get(Assets.GAME_MUSIC);
             gameMusic.setVolume(0.7f);
-            gameMusic.setVolume(0.7f);
+            gameMusic.setLooping(true);
             gameMusic.play();
         }
     }

@@ -16,9 +16,9 @@ import java.util.Random;
 
 public class WordMatrixStage extends MyStage {
 
-    public String[] szavak = new String[]{"FA", "SZALLITOK", "PENDROID", "VERSENY", "BENDZSI", "MARTON", "VALTER", "MARTIN", "CSANY", "TELEFON", "SZILARD", "KANIZSA", "EGERSZEG"};
+    public String[] szavak = new String[]{"FA", "SZALLITOK", "PENDROID", "VERSENY", "BENDZSI", "MARTON", "VALTER", "MARTIN", "CSANY", "TELEFON", "SZILARD", "KANIZSA", "EGERSZEG", "IVÁN", "IPROUTE", "TUSKE"};
 
-    public int MAX_WORDS = 4;
+    public int MAX_WORDS = 3;
     public int FOUND_WORDS = 0;
 
     public MyLabel timeLabel;
@@ -74,13 +74,13 @@ public class WordMatrixStage extends MyStage {
                     newWord += randWord.charAt(j) + "\n";
                 }
                 final MatrixWord szo = new MatrixWord(newWord, game.getLabelStyle());
-                System.out.println("minsuz: "+(startAt));
+                //System.out.println("minsuz: "+(startAt));
 
                 if(startAt != 0) startAt += 1;
 
                 szo.setPosition(label.getX(), label.getY() + label.getHeight() - szo.getHeight() - (startAt)*42); //- startAt * 30);
                 szo.setAlignment(Align.center);
-                szo.setColor(Color.GREEN);
+                szo.setColor(new Color(1, 0.1f, 0.1f, 1));
                 szo.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
@@ -149,7 +149,7 @@ public class WordMatrixStage extends MyStage {
             }
 
             if(placeholderAt != 0) {
-                System.out.println("Nem nullánál kezdődik!");
+                //System.out.println("Nem nullánál kezdődik!");
                 String kitolto = ((char)(rand.nextInt(25) + 65)) + ""+((char)(rand.nextInt(25) + 65));
                 txt = kitolto + txt.substring(0, placeholderAt - 1) + placeholder + txt.substring(placeholderAt + placeholderLength + 1, txt.length());
             }else {
@@ -158,7 +158,7 @@ public class WordMatrixStage extends MyStage {
             }
         }
 
-        System.out.println("EZ JÓ? : '"+txt+"'");
+        //System.out.println("EZ JÓ? : '"+txt+"'");
 
         String matrix = "";
         for(int i = 0; i < txt.length(); i++) {
